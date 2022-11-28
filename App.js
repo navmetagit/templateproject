@@ -1,52 +1,26 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-const App= () => {
-  const [isDarkMode,setIsDarkMode] = React.useState(useColorScheme() === 'dark');
-  console.log('dark mode ',isDarkMode);
-  
+import { View } from 'react-native';
+import Routes from './src/Navigation/Routes';
+import { Provider  } from 'react-redux'
+import {store,persistor} from './src/redux/store'
+// import persistStore from 'redux-persist/es/persistStore'
+import {PersistGate} from 'redux-persist/integration/react'
+// let persistor  = persistStore(store)
+const App = () => {
 
   return (
-    <SafeAreaView style={{backgroundColor:isDarkMode ? '#fff':'#000',flex:1}}>
-      
-    </SafeAreaView>
+
+
+    <View style={{ flex: 1 }}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+
+        <Routes />
+        </PersistGate>
+      </Provider>
+    </View>
+
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
