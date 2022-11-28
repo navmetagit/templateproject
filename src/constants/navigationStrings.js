@@ -6,4 +6,5 @@ export default {
     PRODUCT_DETAILS:"productDetails",
     SEARCH:"Search",
     EDIT_PROFILE:"editProfile",
+    LOGIN:"Login",
 }

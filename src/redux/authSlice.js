@@ -13,19 +13,23 @@ const authSlice = createSlice({
 
         status : STATUSES.IDLE,
 
-        reducers:{
-            SignIn(state,action){
-                state.authData = action.payload;
-            },
-            setStatus(state, action) {
-                state.status = action.payload;
-            },
-            
-        }
     },
+    reducers:{
+        SignIn(state,action){
+            console.log('see signin: ',action.payload);
+            state.authData = action.payload;
+        },
+        setStatus(state, action) {
+            state.status = action.payload;
+        },
+        SignOut(state, action) {
+            state.authData = null;
+        }
+        
+    }
 })
 
-export const {SignIn, setStatus} = authSlice.actions;
+export const {SignIn, setStatus,SignOut} = authSlice.actions;
 
 export default authSlice.reducer;
 

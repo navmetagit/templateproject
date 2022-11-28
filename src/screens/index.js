@@ -4,3 +4,4 @@ export {default as Explore} from './Explore/Explore';
 export {default as ProductDetails} from './ProductDetails/ProductDetails';
 export {default as Search} from './Search/Search';
 export {default as EditProfile} from './EditProfile/EditProfile'; 
+export {default as Login} from './Login/Login'; 
