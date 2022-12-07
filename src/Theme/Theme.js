@@ -1,3 +1,14 @@
+import * as React from 'react';
+import {  DefaultTheme } from '@react-navigation/native';
+
+// const MyTheme = {
+//     ...DefaultTheme,
+//     colors: {
+//         ...DefaultTheme.colors,
+//         primary: 'rgb(255, 45, 85)',
+//     }
+// }
+
 export const darkTheme={
     mode : 'dark',
     BACKGROUND_COLOR:'rgb(1,3,18)',

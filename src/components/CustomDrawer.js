@@ -1,35 +1,69 @@
 import React from 'react';
 import {
-    DrawerContentScrollView,
-    DrawerItemList,
-    DrawerItem
-  } from '@react-navigation/drawer';
-  import {Image} from 'react-native'
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem
+} from '@react-navigation/drawer';
+import useGlobalStyles from "../components/globalStyles"
+import { Image ,Switch,View, Text,TouchableOpacity} from 'react-native'
 import navigationStrings from '../constants/navigationStrings'
 import imagePath from '../constants/imagePath'
-  function CustomDrawer(props) {
-    const {navigation} = props;
+import { useTheme } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux'
+import { ChangeTheme } from '../redux/themeSlice'
+function CustomDrawer(props) {
+  const { navigation, ThemeRevert } = props;
+  const { colors } = useTheme();
+  const dispatch = useDispatch()
+  const globalStyles = useGlobalStyles();
+  const [isEnabled, setIsEnabled] = React.useState(false);
+  const { currentTheme } = useSelector((state) => state.theme)
+  function toggleSwitch  (){
+    console.log('changing theme ',currentTheme);
+    if(currentTheme=='light'){
+
+        dispatch(ChangeTheme('dark'))
+    }
+    else{
+
+        dispatch(ChangeTheme('light'))
+    }
+    setIsEnabled(previousState => !previousState);
+  }
     return (
+  
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
 
         <DrawerItem
-        label={'Home'}
-        onPress={()=>navigation.navigate(navigationStrings.HOME)}
-        icon={()=><Image 
-            source={imagePath.icHome}
-        />}
-        labelStyle={{color: 'red',fontWeight: '300'}}
+          label={'Home'}
+          onPress={() => navigation.navigate(navigationStrings.HOME)}
+          icon={() => <Image
+            source={imagePath.icHome} style={{tintColor:colors.icon}}
+          />}
+          labelStyle={{ color:  colors.text , fontWeight: '300' }}
         />
         <DrawerItem
-        label={'Profile'}
-        onPress={()=>navigation.navigate(navigationStrings.PROFILE)}
-        icon={()=><Image 
-            source={imagePath.icProfile}
-            />}
-        labelStyle={{color: 'red',fontWeight: '300'}}
+          label={'Profile'}
+          onPress={() => navigation.navigate(navigationStrings.PROFILE)}
+          icon={() => <Image
+            source={imagePath.icProfile} style={{tintColor:colors.icon}}
+          />}
+          labelStyle={{ color:  colors.text , fontWeight: '300' }}
         />
+        <View style={[globalStyles.themeChanger]}>
+            <Text>hi its nav</Text>
+          <Switch
+        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={toggleSwitch}
+        value={isEnabled}
+      />
+        </View>
       </DrawerContentScrollView>
-    );
-  }
-  export default CustomDrawer;
+      
+  );
+}
+export default CustomDrawer;
+

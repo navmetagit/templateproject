@@ -9,7 +9,7 @@ import { SignOut } from '../../redux/authSlice'
 import { lightTheme, darkTheme } from '../../Theme/Theme'
 import { ChangeTheme } from '../../redux/themeSlice';
 import styled, { ThemeProvider } from 'styled-components'
-import CommonStyles from '../../components/CommonStyles'
+import CommonStyles from '../../components/globalStyles'
 // create a component
 const Home = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -28,8 +28,10 @@ const Home = ({ navigation }) => {
     return (
         // <ThemeProvider theme={currentTheme}>
 
-            <View style={[styles.container,{backgroundColor:currentTheme=='light'?lightTheme.BACKGROUND_COLOR:darkTheme.BACKGROUND_COLOR}]}>
-                <StatusBar backgroundColor="transparent" translucent  barStyle={currentTheme=='light'?lightTheme.STATUS_BAR_STYLE:darkTheme.STATUS_BAR_STYLE} />
+            <View style={[styles.container
+            // ,{backgroundColor:currentTheme=='light'?lightTheme.BACKGROUND_COLOR:darkTheme.BACKGROUND_COLOR}
+            ]}>
+                {/* <StatusBar backgroundColor="transparent" translucent  barStyle={currentTheme=='light'?lightTheme.STATUS_BAR_STYLE:darkTheme.STATUS_BAR_STYLE} /> */}
                 {/* <StatusBar barStyle={currentTheme=='light'?lightTheme.STATUS_BAR_STYLE:darkTheme.STATUS_BAR_STYLE} translucent={true} /> */}
                 <SafeAreaView style={{ marginHorizontal: 24 }}>
                     <HeaderComp text="Home" />
@@ -42,21 +44,7 @@ const Home = ({ navigation }) => {
                         btnText="Sign Out"
                         onPress={OutFn}
                     />
-                    {
-                        currentTheme.mode == 'light' ? (
-                            <Button
-                                onPress={() => dispatch(ChangeTheme(darkTheme))}
-                                title="change to Dark theme"
-                            />
-                        )
-                            :
-                            (
-                                <Button
-                                    onPress={() => dispatch(ChangeTheme(lightTheme))}
-                                    title="change to Light theme"
-                                />
-                            )
-                    }
+                   
                     <Text>{!!authData && authData.name}</Text>
                 </SafeAreaView>
             </View>
