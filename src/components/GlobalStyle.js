@@ -7,9 +7,18 @@ import {scale,verticalScale,moderateScale,} from 'react-native-size-matters';
 // when vertical : verticalscale
 // when font size : scale
 const getGlobalStyles = ({colors,width ,height}) => StyleSheet.create({
+  container:{
+    flex:1,
+    paddingTop:verticalScale(35)
+  },
   themeChanger: {
-
-    backgroundColor: colors.nav,
+    justifyContent:'space-between',
+    alignItems: 'center',
+    alignSelf:'flex-end',
+    flexDirection:'row',
+    paddingHorizontal:moderateScale(10),
+    
+    width:moderateScale(150)
   },
   bg:{
     height: height,//moderatescale(200)
@@ -35,15 +44,15 @@ const getGlobalStyles = ({colors,width ,height}) => StyleSheet.create({
   }
 });
 
-function useGlobalStyles() {
+function GlobalStyle() {
   const {width, height} = Dimensions.get('screen')
   const { colors } = useTheme();
-  console.log('issue may be here');
+  console.log('issue may be here',new Date().toLocaleTimeString());
   // We only want to recompute the stylesheet on changes in color.
   const styles = React.useMemo(() => getGlobalStyles({ colors,width ,height}), [colors]);
 
   return styles;
 }
 
-export default useGlobalStyles;
+export default GlobalStyle;
 
