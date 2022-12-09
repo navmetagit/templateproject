@@ -9,7 +9,7 @@ import {scale,verticalScale,moderateScale,} from 'react-native-size-matters';
 const getGlobalStyles = ({colors,width ,height}) => StyleSheet.create({
   container:{
     flex:1,
-    paddingTop:verticalScale(35)
+    // paddingTop:verticalScale(35)
   },
   themeChanger: {
     justifyContent:'space-between',

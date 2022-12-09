@@ -1,84 +1,131 @@
-import { View, Text, ImageBackground, TouchableOpacity,SafeAreaView } from 'react-native'
+import { View, Text, ImageBackground, StyleSheet,
+  TouchableOpacity,Pressable,Dimensions } from 'react-native'
 import ButtonComp from '../../components/ButtonComp'
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { SignIn } from '../../redux/authSlice'
 import styles from './styles'
-import { FlashList } from "@shopify/flash-list";
+import Svg,{Image,Ellipse,ClipPath,} from 'react-native-svg'
+import Animated,{useSharedValue,withTiming,
+  withDelay
+  ,useAnimatedStyle,interpolate} from 'react-native-reanimated'
 import { GlobalStyle } from '../../components'
+import { TextInput } from 'react-native-gesture-handler'
 export default function Login({ navigation }) {
+  const {height, width} = Dimensions.get('window')
+  const imagePosition = useSharedValue(1)
+  const imageAnimatedStyle = useAnimatedStyle(()=>{
+  const interpolation = interpolate(imagePosition.value,[0,1],[-height/2,0])
+    return {
+      transform:[{translateY:withTiming(interpolation,{duration:1000})}]
+    }
+  })
   const globalStyles = GlobalStyle();
   const dispatch = useDispatch();
-  // const { authData } = useSelector((state) => state.auth)
-  const [data,setData] = React.useState([])
-  const[val1,setVal1] = React.useState(-1)
-  const[val2,setVal2] = React.useState(-1)
+  
   const LoginHandle = () => {
+    imagePosition.value=0
     // console.log('see vals');
-    dispatch(SignIn('navpreet', '123'))
+    // dispatch(SignIn('navpreet', '123'))
   }
-  React.useEffect(() => {
-    console.log('value of val1 and 2 ',val1, val2);
-  },[val1,val2])
-  React.useEffect(() => {
-    let url = 'https://api.publicapis.org/entries'
-    fetch(url)
-    .then((response) => response.json())
-    .then(val=>{
-      // console.log('data is  ',val);
-      setData(val)
-    })
-    .catch(e=>{
-      console.log('exception is ',e);
-    })
-  },[])
+  const RegisterHandle = () => {
+    imagePosition.value=1
+    // console.log('see vals');
+    // dispatch(SignIn('navpreet', '123'))
+  }
+ 
+  const buttonAnimatedStyle = useAnimatedStyle(()=>{
+    const interpolation = interpolate(imagePosition.value,[0,1],[250,0])
+    return{
+      opacity:withTiming(imagePosition.value,{duration:500}),
+      transform:[{translateY:withTiming(interpolation,{duration:500})}]
+    }
+  })
 
+  const closeButtonContainerStyle= useAnimatedStyle(()=>{
+    const interpolation = interpolate(imagePosition.value,[0,1],[180,360])
+    return{
+      opacity:withTiming(imagePosition.value ===1? 0:1,{duration:800}),
+      transform: [{rotate:withTiming(interpolation+"deg",{duration:1000})}]
 
-  return (
-    <SafeAreaView style={{ flex: 1, }}>
-      <ImageBackground
-        source={{ uri: 'https://www.shihoriobata.com/wp-content/uploads/2020/12/moon-and-clouds-aesthetic-background-phone2-576x1024.jpg' }}
-        style={[globalStyles.bg, {}]}
-      >
-        <Text style={[globalStyles.heading]}>LOGIN</Text>
-        <View style={{flex:0.8,flexDirection: 'row',justifyContent: 'space-between'}}>
+    }
+  })
 
-        <View style={{flex:0.38,}}>
-        <FlashList
-          data={data.entries}
-          extraData={val1}
-          renderItem={({ item,index }) => (
-          <TouchableOpacity onPress={() => setVal1(index)}
-          style={{width: '100%', height: 100,backgroundColor:index==val1?'green':'grey',marginBottom:10}}>
-            <Text>{item.API} {item.Description}</Text>
-            
-          </TouchableOpacity>
-          )}
-          estimatedItemSize={200}
-        />
+  const formAnimatedStyle = useAnimatedStyle(()=>{
+    return{
+      opacity:imagePosition.value===0 
+                ? 
+                withDelay(400,withTiming(1,{duration:800}))
+                :   
+                withTiming(0,{duration:300})
+    }
+  })
+
+  return(
+    <View style={styles.container}>
+    <Animated.View style={[StyleSheet.absoluteFill,imageAnimatedStyle]}>
+      <Svg height={height+100} width={width}>
+        <ClipPath id="clipPathId">
+          <Ellipse cx={width/2} rx={height} ry={height+100}/>
+        </ClipPath>
+        <Image 
+        width={width+100}
+        height={height+100}
+        preserveAspectRatio={'xMidYMid slice'}
+        clipPath="url(#clipPathId)"
+        href={require('../../assets/images/login-background.jpg')} />
+      
+      
+      </Svg>
+      <Animated.View style={[styles.closeButtonContainer,closeButtonContainerStyle]}>
+        <Text onPress={()=> imagePosition.value=1} style={styles.x}>X</Text>
+      </Animated.View>
+      </Animated.View>
+      <View style={styles.btnContainer}>
+        <Animated.View style={buttonAnimatedStyle}>
+
+        <Pressable style={styles.button} onPress={LoginHandle}>
+          <Text style={styles.btntext}>
+            LOG IN
+          </Text>
+        </Pressable>
+        </Animated.View>
+        <Animated.View style={buttonAnimatedStyle}>
+        <Pressable style={styles.button} onPress={RegisterHandle}>
+          <Text style={styles.btntext}>
+            REGISTER
+          </Text>
+        </Pressable>
+        </Animated.View>
+        <View style={styles.formInputContainer}>
+          <TextInput placeholder="Email" placeholderTextColor={"black"} style={styles.textinput}/>
+          <TextInput placeholder="Full Name" placeholderTextColor={"black"} style={styles.textinput}/>
+          <TextInput placeholder="Password" placeholderTextColor={"black"} style={styles.textinput}/>
+        <View style={styles.formButton}>
+
         </View>
-        <View style={{flex:0.38,}}>
-        <FlashList
-          data={data.entries}
-          extraData={val2}
-          renderItem={({ item,index }) => (
-          <TouchableOpacity onPress={() => setVal2(index)}
-          style={{width: '100%', height: 100,backgroundColor:index==val2?'green':'grey',marginBottom:10}}>
-            <Text>{item.API} {item.Description}</Text>
-            
-          </TouchableOpacity>
-          )}
-          estimatedItemSize={200}
-        />
+        
         </View>
-        </View>
-        <View style={{flex:0.2,justifyContent: 'flex-end',backgroundColor:'red',paddingBottom:100}}>
-        <ButtonComp
-          btnText="Login to user"
-          onPress={LoginHandle}
-        />
-        </View>
-      </ImageBackground>
-    </SafeAreaView>
+      </View>
+     
+    </View>
   )
+
 }
+// return (
+//   <SafeAreaView style={{ flex: 1, }}>
+//     <ImageBackground
+//       source={{ uri: 'https://www.shihoriobata.com/wp-content/uploads/2020/12/moon-and-clouds-aesthetic-background-phone2-576x1024.jpg' }}
+//       style={[globalStyles.bg, {}]}
+//     >
+//       <Text style={[globalStyles.heading]}>LOGIN</Text>
+     
+//       <View style={{justifyContent: 'flex-end',}}>
+//       <ButtonComp
+//         btnText="Login to user"
+//         onPress={LoginHandle}
+//       />
+//       </View>
+//     </ImageBackground>
+//   </SafeAreaView>
+// )

@@ -26,9 +26,7 @@ const Home = ({ navigation }) => {
         // <ThemeProvider theme={currentTheme}>
 
             <View style={globalStyles.container}>
-                {/* <StatusBar backgroundColor="transparent" translucent  barStyle={currentTheme=='light'?lightTheme.STATUS_BAR_STYLE:darkTheme.STATUS_BAR_STYLE} /> */}
-                {/* <StatusBar barStyle={currentTheme=='light'?lightTheme.STATUS_BAR_STYLE:darkTheme.STATUS_BAR_STYLE} translucent={true} /> */}
-                    <HeaderComp text="Home" />
+                  <HeaderComp text="Home" />
                 <SafeAreaView>
                     <ButtonComp
                         btnText="Product Details"
