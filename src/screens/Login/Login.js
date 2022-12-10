@@ -1,5 +1,5 @@
 import { View, Text, ImageBackground, StyleSheet,
-  TouchableOpacity,Pressable,Dimensions } from 'react-native'
+  KeyboardAvoidingView,Pressable,Dimensions } from 'react-native'
 import ButtonComp from '../../components/ButtonComp'
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -7,13 +7,15 @@ import { SignIn } from '../../redux/authSlice'
 import styles from './styles'
 import Svg,{Image,Ellipse,ClipPath,} from 'react-native-svg'
 import Animated,{useSharedValue,withTiming,
-  withDelay
+  withDelay,runOnJS,withSequence, withSpring
   ,useAnimatedStyle,interpolate} from 'react-native-reanimated'
 import { GlobalStyle } from '../../components'
 import { TextInput } from 'react-native-gesture-handler'
 export default function Login({ navigation }) {
   const {height, width} = Dimensions.get('window')
   const imagePosition = useSharedValue(1)
+  const formButtonScale = useSharedValue(1)
+  const[isRegistering,setIsRegistering] = React.useState(false)
   const imageAnimatedStyle = useAnimatedStyle(()=>{
   const interpolation = interpolate(imagePosition.value,[0,1],[-height/2,0])
     return {
@@ -24,16 +26,29 @@ export default function Login({ navigation }) {
   const dispatch = useDispatch();
   
   const LoginHandle = () => {
+    if(isRegistering){
+      //runOnJS for gesture handler specifically
+      runOnJS(setIsRegistering(false))
+    }
     imagePosition.value=0
     // console.log('see vals');
     // dispatch(SignIn('navpreet', '123'))
   }
   const RegisterHandle = () => {
-    imagePosition.value=1
+    if(!isRegistering){
+
+      runOnJS(setIsRegistering(true))
+    }
+    // imagePosition.value=1 //for closing
+    imagePosition.value=0
     // console.log('see vals');
     // dispatch(SignIn('navpreet', '123'))
   }
- 
+ const formButtonAnimatedStyle = useAnimatedStyle(()=>{
+  return{
+    transform: [{scale: formButtonScale.value}]
+  }
+ })
   const buttonAnimatedStyle = useAnimatedStyle(()=>{
     const interpolation = interpolate(imagePosition.value,[0,1],[250,0])
     return{
@@ -63,6 +78,9 @@ export default function Login({ navigation }) {
 
   return(
     <View style={styles.container}>
+     
+
+     
     <Animated.View style={[StyleSheet.absoluteFill,imageAnimatedStyle]}>
       <Svg height={height+100} width={width}>
         <ClipPath id="clipPathId">
@@ -97,17 +115,27 @@ export default function Login({ navigation }) {
           </Text>
         </Pressable>
         </Animated.View>
-        <View style={styles.formInputContainer}>
-          <TextInput placeholder="Email" placeholderTextColor={"black"} style={styles.textinput}/>
-          <TextInput placeholder="Full Name" placeholderTextColor={"black"} style={styles.textinput}/>
-          <TextInput placeholder="Password" placeholderTextColor={"black"} style={styles.textinput}/>
-        <View style={styles.formButton}>
+      
 
-        </View>
+        <Animated.View style={[styles.formInputContainer,formAnimatedStyle]}>
+          <TextInput placeholder="Email" placeholderTextColor={"black"} style={styles.textinput}/>
+          {
+            isRegistering &&
+            (<TextInput placeholder="Full Name" placeholderTextColor={"black"} style={styles.textinput}/>)}
+          <TextInput placeholder="Password" placeholderTextColor={"black"} style={styles.textinput}
+          // onFocus={()=>  imagePosition.value=-0.5}
+          />
+       <Pressable onPress={()=> formButtonScale.value = withSequence(withSpring(1.3),withSpring(1))}>
+{/*  withSequence(withSpring(1.3),withSpring(1),withDelay(100,withSpring(1)) */}
+        <Animated.View style={[styles.formButton,formButtonAnimatedStyle]}>
+          <Text style={styles.btntext}>{isRegistering?'REGISTER':'LOG IN'}</Text>
+        </Animated.View>
+       </Pressable>
         
-        </View>
+        </Animated.View>
+        
       </View>
-     
+      
     </View>
   )
 
