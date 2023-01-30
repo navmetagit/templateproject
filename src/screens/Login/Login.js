@@ -32,7 +32,7 @@ export default function Login({ navigation }) {
     }
     imagePosition.value=0
     // console.log('see vals');
-    // dispatch(SignIn('navpreet', '123'))
+    dispatch(SignIn('navpreet', '123'))
   }
   const RegisterHandle = () => {
     if(!isRegistering){
